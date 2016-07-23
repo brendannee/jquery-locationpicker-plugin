@@ -1,4 +1,4 @@
-/*! jquery-locationpicker - v0.1.13 - 2016-03-11 */
+/*! jquery-locationpicker - v0.1.13 - 2016-07-24 */
 (function($) {
     function GMapContext(domElement, options) {
         var _map = new google.maps.Map(domElement, options);
@@ -306,6 +306,14 @@
             });
             $target.data("locationpicker", gmapContext);
             google.maps.event.addListener(gmapContext.marker, "dragend", function(event) {
+                GmUtility.setPosition(gmapContext, gmapContext.marker.position, function(context) {
+                    var currentLocation = GmUtility.locationFromLatLng(gmapContext.location);
+                    context.settings.onchanged.apply(gmapContext.domContainer, [ currentLocation, context.radius, true ]);
+                    updateInputValues(gmapContext.settings.inputBinding, gmapContext);
+                });
+            });
+            google.maps.event.addListener(gmapContext.map, "click", function(event) {
+                gmapContext.marker.setPosition(event.latLng);
                 GmUtility.setPosition(gmapContext, gmapContext.marker.position, function(context) {
                     var currentLocation = GmUtility.locationFromLatLng(gmapContext.location);
                     context.settings.onchanged.apply(gmapContext.domContainer, [ currentLocation, context.radius, true ]);

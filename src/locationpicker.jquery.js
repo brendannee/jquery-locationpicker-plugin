@@ -376,6 +376,14 @@
                     updateInputValues(gmapContext.settings.inputBinding, gmapContext);
                 });
             });
+            google.maps.event.addListener(gmapContext.map, 'click', function(event) {
+              gmapContext.marker.setPosition(event.latLng);
+              GmUtility.setPosition(gmapContext, gmapContext.marker.position, function (context) {
+                var currentLocation = GmUtility.locationFromLatLng(gmapContext.location);
+                context.settings.onchanged.apply(gmapContext.domContainer, [currentLocation, context.radius, true]);
+                updateInputValues(gmapContext.settings.inputBinding, gmapContext);
+              });
+            });
             GmUtility.setPosition(gmapContext, new google.maps.LatLng(settings.location.latitude, settings.location.longitude), function(context){
                 updateInputValues(settings.inputBinding, gmapContext);
                 // Set  input bindings if needed
